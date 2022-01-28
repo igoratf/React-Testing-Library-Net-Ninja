@@ -1,90 +1,34 @@
-import { render, screen } from '@testing-library/react';
-import Header from '../Header';
+import { render, screen } from "@testing-library/react";
+import Header from "../Header";
 
 describe("Header", () => {
-    it('should render same text passed into title prop', () => {
-        render(
-            <Header 
-              title="todo"
-            />
-        );
-        const h1Element = screen.getByText(/todo/i);
-        expect(h1Element).toBeInTheDocument();
-    });
-})
+   // GET BY - get by selector and fails test if element is not found
+   // 1. text
+  it("renders same text passed into title prop", () => {
+    render(<Header title="my header" />);
+    const headingElement = screen.getByText(/my header/i);
+    expect(headingElement).toBeInTheDocument();
+  });
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.getByRole("heading");
-//     expect(h1Element).toBeInTheDocument();
-// });
+  // 2. role
+  /* it("renders same text passed into title prop", () => {
+   render(<Header title="my header" />);
+   const headingElement = screen.getByRole('heading', { name: "my header"});
+   expect(headingElement).toBeInTheDocument();
+ }); */
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.getByRole("heading", { name: /todo/i });
-//     expect(h1Element).toBeInTheDocument();
-// });
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.getByTitle("Header");
-//     expect(h1Element).toBeInTheDocument();
-// });
+   // FIND BY - Asynchronous (must use async/await) and fails test if element is not found
+   it("renders same text passed into title prop", async () => {
+      render(<Header title="my header" />);
+      const headingElement = await screen.findByText(/my header/i);
+      expect(headingElement).toBeInTheDocument();
+   });
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h2Element = screen.getByTestId("header-2");
-//     expect(h2Element).toBeInTheDocument();
-// });
-
-// // WITH FINDBY
-
-// it('should render same text passed into title prop', async () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = await screen.findByText(/todo/i);
-//     expect(h1Element).toBeInTheDocument();
-// });
-
-// // WITH QUERYBY
-
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.queryByText(/dogs/i);
-//     expect(h1Element).not.toBeInTheDocument
-// });
-
-// // WITH GETALLBY
-
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Elements = screen.getAllByText(/todo/i);
-//     expect(h1Elements.length).toBe(1);
-// });
+   // QUERY BY - Won't fail test if element is not found
+   it("renders same text passed into title prop", async () => {
+      render(<Header title="my header" />);
+      const headingElement = await screen.queryByText(/dog/i);
+      expect(headingElement).not.toBeInTheDocument();
+   });
+});
