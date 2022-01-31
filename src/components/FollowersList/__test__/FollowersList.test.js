@@ -1,48 +1,80 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import FollowersList from "../FollowersList";
+import { render, screen } from "@testing-library/react"
+import { BrowserRouter } from "react-router-dom"
+import FollowersList from "../FollowersList"
+import axios from "axios";
 
 const MockFollowersList = () => {
-    return (
-        <BrowserRouter>
-            <FollowersList />
-        </BrowserRouter>
-    )
+   return (
+      <BrowserRouter>
+         <FollowersList />
+      </BrowserRouter>
+   )
 }
 
+const mockResponse = {
+   data: {
+      results: [
+         {
+            name: {
+               first: "John",
+               last: "Doe"
+            },
+            picture: {
+               large: "https://randomuser.me/api/portraits/men/39.jpg"
+            },
+            login: {
+               username: "Test"
+            }
+         }
+      ]
+   }
+}
+
+
 describe("FollowersList", () => {
+   const getSpy = jest.spyOn(axios, "get");
 
-    beforeEach(() => {
-        // console.log("RUNS BEFORE EACH TEST")
-        jest.mock("../../../__mocks__/axios")
-    })
+   it("should render follower items", async () => {
+      getSpy.mockResolvedValueOnce(mockResponse);
+      render(<MockFollowersList />);
+      const followerDivElement = await screen.findByTestId("follower-item-0");
+      expect(followerDivElement).toBeInTheDocument();
+   });
 
-    // beforeAll(() => {
-    //     console.log("RUNS ONCE BEFORE ALL TESTS")
-    // })
-
-    // afterEach(() => {
-    //     console.log("RUNS AFTER EACH TEST")
-    // })
-
-    // afterAll(() => {
-    //     console.log("RUNS ONCE AFTER ALL TESTS")
-    // })
-
-    it('should fetch and render input element', async () => {
-        render(
-            <MockFollowersList />
-        );
-        const followerDivElement = await screen.findByTestId(`follower-item-0`)
-        expect(followerDivElement).toBeInTheDocument();
-    });
-    
-    it('should fetch and render input element', async () => {
-        render(
-            <MockFollowersList />
-        );
-    
-        const followerDivElement = await screen.findByTestId(`follower-item-0`)
-        expect(followerDivElement).toBeInTheDocument();
-    });
+   it("should render multiple follower items", async () => {
+      const mockResponseMultiple = {
+         data: {
+            results: [
+               {
+                  name: {
+                     first: "John",
+                     last: "Doe"
+                  },
+                  picture: {
+                     large: "https://randomuser.me/api/portraits/men/39.jpg"
+                  },
+                  login: {
+                     username: "Test"
+                  }
+               },
+               {
+                  name: {
+                     first: "Mock",
+                     last: "User"
+                  },
+                  picture: {
+                     large: "https://randomuser.me/api/portraits/men/39.jpg"
+                  },
+                  login: {
+                     username: "Mock"
+                  }
+               }
+            ]
+         }
+      }
+      getSpy.mockResolvedValueOnce(mockResponseMultiple);
+      render(<MockFollowersList />);
+      const followerDivElements = await screen.findAllByTestId(/follower-item/i);
+      expect(followerDivElements.length).toBe(2);
+   }) 
 })
