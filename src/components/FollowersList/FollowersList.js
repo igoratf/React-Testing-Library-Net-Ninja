@@ -23,11 +23,7 @@ export default function FollowersList() {
         <div className="followerslist-container">
             <div>
                 {followers.map((follower, index) => (
-<<<<<<< HEAD
-                    <div className="follower-item" data-testid={`follower-item-${index}`}>
-=======
                     <div className="follower-item" data-testid={`follower-item-${index}`} key={index}>
->>>>>>> add tests for FollowersList -- mock requests
                         <img src={follower.picture.large}/>
                         <div className="followers-details">
                             <div className="follower-item-name">
